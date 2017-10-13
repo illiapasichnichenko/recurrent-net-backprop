@@ -63,7 +63,7 @@ phases = np.random.rand(dim,1)*2*np.pi
 p = 0
 pdf = PdfPages('plots.pdf')
 for i in range(iter_number):
-	# prepare inputs #TODO
+	# prepare inputs
 	inputs, targets = [], []
 	init_phase = np.random.rand()*2*np.pi
 	for _ in range(batch_size):
@@ -81,8 +81,8 @@ for i in range(iter_number):
 	# plots
 	if i+1 in [5,10,20,50,100,500,1000,5000]:
 		r = range(batch_size)
-		target = [float(targets[i][1]) for i in r]
-		output = [float(y[i][1]) for i in r]
+		target = [float(targets[i][0]) for i in r]
+		output = [float(y[i][0]) for i in r]
 		plt.plot(r, target, r, output)
 		plt.title('iteration {}'.format(i+1))
 		pdf.savefig()
