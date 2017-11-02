@@ -5,9 +5,8 @@ from matplotlib.backends.backend_pdf import PdfPages
 # hyperparameters
 dim = 10 # dim of input and output vectors
 hidden_size = 20 # size of hidden layer of neurons
-batch_size = 100
-iter_number = 5000
 seq_length = 25
+iter_number = 5000
 learning_rate = 1e-1
 step = 0.1 # phase difference between 2 consecutive observations
 
@@ -36,7 +35,7 @@ def lossFun(inputs, targets, hprev):
 		z[t] = np.dot(W1, inputs[t]) + np.dot(R, h[t-1]) + b1
 		h[t] = sigmoid(z[t]) # hidden state
 		y[t] = np.dot(W2, h[t]) + b2
-		loss += np.linalg.norm(y[t]-targets[t]) # MSE loss
+		loss += np.sum((y[t]-targets[t])**2)
 	loss = loss/n
 	# backward pass: compute gradients going backwards
 	dW1, dW2, dR = np.zeros_like(W1), np.zeros_like(W2), np.zeros_like(R)
@@ -59,16 +58,15 @@ def lossFun(inputs, targets, hprev):
 hprev = np.zeros((hidden_size,1))
 mW1, mW2, mR = np.zeros_like(W1), np.zeros_like(W2), np.zeros_like(R)
 mb1, mb2 = np.zeros_like(b1), np.zeros_like(b2) # memory variables for Adagrad
-phases = np.random.rand(dim,1)*2*np.pi
-p = 0
+init_phases = np.random.rand(dim,1)*2*np.pi
 pdf = PdfPages('plots.pdf')
 for i in range(iter_number):
 	# prepare inputs
 	inputs, targets = [], []
-	init_phase = np.random.rand()*2*np.pi
-	for _ in range(batch_size):
-		inputs.append(np.sin(phases+p))
-		targets.append(np.sin(phases+p+step))
+	p = np.random.rand()*2*np.pi # starting point
+	for _ in range(seq_length):
+		inputs.append(np.sin(init_phases+p))
+		targets.append(np.sin(init_phases+p+step))
 		p += step
 	
 	# forward the batch through the net and fetch gradient
@@ -76,11 +74,11 @@ for i in range(iter_number):
 
 	# print progress
 	if (i+1)%50 == 0: 
-		print('iter {}, loss: {:.4f}'.format(i+1, loss)) 
+		print('iter {}, loss: {:.8f}'.format(i+1, loss)) 
 
 	# plots
 	if i+1 in [5,10,20,50,100,500,1000,5000]:
-		r = range(batch_size)
+		r = range(seq_length)
 		target = [float(targets[i][0]) for i in r]
 		output = [float(y[i][0]) for i in r]
 		plt.plot(r, target, r, output)
