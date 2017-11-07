@@ -47,4 +47,4 @@ for i in range(iter_number):
 		_, loss, state = sess.run([train_step, mse_loss, h], feed_dict=feed)
 		loss_sum += loss
 		p += step
-	if (i+1) % 50 == 0: print('iter {}, loss: {:.8f}'.format(i+1, loss_sum/seq_length))
+	if (i+1) % 100 == 0: print('iter {}, loss: {:.8f}'.format(i+1, loss_sum/seq_length))

@@ -73,7 +73,7 @@ for i in range(iter_number):
 	loss, dW1, dW2, dR, db1, db2, hprev, y = lossFun(inputs, targets, hprev)
 
 	# print progress
-	if (i+1)%50 == 0: 
+	if (i+1)%100 == 0: 
 		print('iter {}, loss: {:.8f}'.format(i+1, loss)) 
 
 	# plots
